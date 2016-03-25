@@ -12,6 +12,7 @@
 #include <map>
 #include <exception>
 #include <math.h>
+#include <process.h>
 using namespace std;
 const string strDataDir = "..\\data\\";
 using namespace boost;
@@ -625,7 +626,9 @@ int _tmain(int argc, _TCHAR* argv[])
 		string strDate;
 		string str;
 		std::regex patten("^(19|20)\\d{2}((0[1-9])|(1[0-2]))((0[1-9])|((1|2)[0-9])|30|31)$");
-		while (true)
+
+		//char ch = ' ';
+		//while (ch != 'q')
 		{
 			cout << "请输入日期，例如20160314：";
 			cin >> strDate;
@@ -638,22 +641,22 @@ int _tmain(int argc, _TCHAR* argv[])
 			if (!GetDataFromCCFX(strDate, str))
 			{
 				cout << "[ccfx_err]" << str << endl;
-				continue;
+				return -1;
 			}
 			if (!GetDataFromXDCE(strDate, str))
 			{
 				cout << "[xdce_err]" << str << endl;
-				continue;
+				return -2;
 			}
 			if (!GetDataFromXSGE(strDate, str))
 			{
 				cout << "[xsge_err]" << str << endl;
-				continue;
+				return -3;
 			}
 			if (!GetDataFromXZCE(strDate, str))
 			{
 				cout << "[xzce_err]" << str << endl;
-				continue;
+				return -4;
 			}
 
 			//合并
@@ -661,6 +664,7 @@ int _tmain(int argc, _TCHAR* argv[])
 			cout << strDate << "数据下载成功！" << endl;
 
 		}
+		::system("pause");
 		return 0;
 
 	}
