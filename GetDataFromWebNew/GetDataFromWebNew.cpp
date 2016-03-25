@@ -20,6 +20,7 @@ using namespace boost;
 void SpliptString(const string& strFull, string strpatten, vector<string>& vec)
 {
 	size_t pos;
+	string ss = "ss";
 	string strtmp = strFull + strpatten;
 	string str;
 	for (int i = 0; i < strtmp.size();)
