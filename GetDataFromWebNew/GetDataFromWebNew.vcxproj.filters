@@ -24,12 +24,54 @@
     <ClInclude Include="targetver.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="ExchangeBase.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="XSGE.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="XDCE.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonFuc.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Log.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="XZCE.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CCFX.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="GetDataFromWebNew.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ExchangeBase.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="XSGE.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="XDCE.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CommonFuc.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Log.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="XZCE.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CCFX.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
