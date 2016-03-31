@@ -2,10 +2,13 @@
 #include "CCFX.h"
 using namespace std;
 
-CCFX::CCFX(std::string strDate) :CExchangeBase(strDate)
+CCFX::CCFX(const std::string& strDate) :CExchangeBase(strDate)
 {
 	m_strECchangeName = _T("CCFX");
 	m_strPath = _T("..\\data\\CCFX" + strDate + _T(".txt"));
+	m_strHost = "www.cffex.com.cn";
+	m_strUrl = "/fzjy/mrhq/" + m_strDate.substr(0, 6) + "/" + m_strDate.substr(6, 7) + "/index.xml";
+	m_strPort = "80";
 }
 
 
@@ -15,18 +18,10 @@ CCFX::~CCFX()
 
 bool CCFX::GetDataFromWeb(std::vector<std::string>& vOut)
 {
-	string strResult, strUrl, strhost,strErr;
-	boost::asio::io_service _io;
-	strhost = "www.cffex.com.cn";
-	string strYear = m_strDate.substr(0, 4);
-	///fzjy/mrhq/201603/17/index.xml
-	strUrl = "/fzjy/mrhq/" + m_strDate.substr(0, 6) + "/" + m_strDate.substr(6, 7) + "/index.xml";
-	int iPort = 80;
-
 	//拿到数据
-	if (!CCommonFuc::httpGet(strResult, strhost, strUrl, _io, strErr))
+	string strResult;
+	if (!httpGet(strResult))
 	{
-		m_strErrInfo = strErr;
 		return false;
 	}
 	if (strResult.empty())
@@ -34,10 +29,10 @@ bool CCFX::GetDataFromWeb(std::vector<std::string>& vOut)
 		m_strErrInfo = "当天没有交易数据";
 		return false;
 	}
-	CCommonFuc::Erasetag(strResult, " ");
-	CCommonFuc::Erasetag(strResult, "\t");
-	CCommonFuc::Erasetag(strResult, "\r");
-	CCommonFuc::Erasetag(strResult, "\n");
+	strResult.erase(remove_if(strResult.begin(), strResult.end(), bind2nd(equal_to<char>(), ' ')), strResult.end());
+	strResult.erase(remove_if(strResult.begin(), strResult.end(), bind2nd(equal_to<char>(), '\t')), strResult.end());
+	strResult.erase(remove_if(strResult.begin(), strResult.end(), bind2nd(equal_to<char>(), '\r')), strResult.end());
+	strResult.erase(remove_if(strResult.begin(), strResult.end(), bind2nd(equal_to<char>(), '\n')), strResult.end());
 
 	//解析写入
 	const std::regex pattern1("<dailydata>(.*?)</dailydata>"); // ^\{"o_curinstrument":(.*)\}
@@ -50,6 +45,11 @@ bool CCFX::GetDataFromWeb(std::vector<std::string>& vOut)
 	if (!fileout.is_open())
 	{
 		throw runtime_error(m_strECchangeName + "打开文件失败");
+	}
+	if (!regex_search( strResult , smtc , pattern1))
+	{
+		m_strErrInfo = "数据格式出错！";
+		return false;
 	}
 	for (std::sregex_token_iterator i(strResult.begin(), strResult.end(), pattern1); i != end; ++i)
 	{

@@ -2,10 +2,13 @@
 #include "XDCE.h"
 using namespace std;
 
-CXDCE::CXDCE(std::string strDate) :CExchangeBase(strDate)
+CXDCE::CXDCE(const std::string& strDate) :CExchangeBase(strDate)
 {
-	m_strECchangeName = _T("XDCE");
-	m_strPath = _T("..\\data\\XDCE" + strDate + _T(".txt"));
+	m_strECchangeName = "XDCE";
+	m_strPath = "..\\data\\XDCE" + strDate + ".txt";
+	m_strHost= "www.dce.com.cn";
+	m_strUrl= "/PublicWeb/MainServlet?action=Pu00011_result&Pu00011_Input.trade_date=" + m_strDate + "&Pu00011_Input.variety=all&Pu00011_Input.trade_type=0";
+	m_strPort = "80";
 }
 
 
@@ -15,18 +18,10 @@ CXDCE::~CXDCE()
 
 bool CXDCE::GetDataFromWeb(std::vector<std::string>& vOut)
 {
-	string strResult, strUrl, strhost,strErr;
-	boost::asio::io_service _io;
-	strhost = "www.dce.com.cn";
-	string strYear = m_strDate.substr(0, 4);
-	//"/PublicWeb/MainServlet?action=Pu00011_result&Pu00011_Input.trade_date=20160314&Pu00011_Input.variety=all&Pu00011_Input.trade_type=0"
-	strUrl = "/PublicWeb/MainServlet?action=Pu00011_result&Pu00011_Input.trade_date=" + m_strDate + "&Pu00011_Input.variety=all&Pu00011_Input.trade_type=0";
-	int iPort = 80;
-
-	//拿到数据
-	if (!CCommonFuc::httpGet(strResult, strhost, strUrl, _io, strErr))
+	//下载数据
+	string strResult;
+	if (!httpGet(strResult))
 	{
-		m_strErrInfo = strErr;
 		return false;
 	}
 	if (strResult.empty())
@@ -35,10 +30,11 @@ bool CXDCE::GetDataFromWeb(std::vector<std::string>& vOut)
 		return false;
 	}
 	//
-	CCommonFuc::Erasetag(strResult, "\r\n");
-	CCommonFuc::Erasetag(strResult, " ");
-	CCommonFuc::Erasetag(strResult, "\t");
-	CCommonFuc::Erasetag(strResult, ",");
+	strResult.erase(remove_if(strResult.begin(), strResult.end(), bind2nd(equal_to<char>(), '\n')), strResult.end());
+	strResult.erase(remove_if(strResult.begin(), strResult.end(), bind2nd(equal_to<char>(), '\r')), strResult.end());
+	strResult.erase(remove_if(strResult.begin(), strResult.end(), bind2nd(equal_to<char>(), ' ')), strResult.end());
+	strResult.erase(remove_if(strResult.begin(), strResult.end(), bind2nd(equal_to<char>(), '\t')), strResult.end());
+	strResult.erase(remove_if(strResult.begin(), strResult.end(), bind2nd(equal_to<char>(), ',')), strResult.end());
 
 	//添加映射
 	map<string, string> mName;
@@ -55,12 +51,17 @@ bool CXDCE::GetDataFromWeb(std::vector<std::string>& vOut)
 	}
 	const std::tr1::regex patternTR("<tr[\\S]*?</tr>");//<tr >[\s\S]*?</tr>
 	const std::regex pattern2("<tdnowrap.*?</td>");//<td nowrap>.*?</td>
-												   //const std::regex pattern3("<td nowrap class="td - right">.*?</td>");//<td nowrap class="td-right">.*?</td>
+	//const std::regex pattern3("<td nowrap class="td - right">.*?</td>");//<td nowrap class="td-right">.*?</td>
 	const std::regex pattern3("<tdnowrap>(.*?)</td>");
 	const std::regex pattern4("<tdnowrapclass=\"td-right\">(.*?)</td>");
 	const std::sregex_token_iterator end;
 	smatch tmpmatch;
 	bool n = regex_search(strResult, tmpmatch, patternTR);
+	if ( !n)
+	{
+		m_strErrInfo = "数据格式出错！";
+		return false;
+	}
 	//<tr*</tr>
 	for (std::sregex_token_iterator i(strResult.begin(), strResult.end(), patternTR); i != end; ++i)
 	{

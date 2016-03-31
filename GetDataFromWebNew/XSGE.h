@@ -4,8 +4,8 @@ class CXSGE :
 	public CExchangeBase
 {
 public:
-	CXSGE(std::string strDate);
-	~CXSGE();
+	CXSGE(const std::string& strDate);
+	virtual ~CXSGE();
 
 public:
 	bool GetDataFromWeb(std::vector<std::string>& vOut);

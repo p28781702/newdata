@@ -4,8 +4,8 @@ class CCFX :
 	public CExchangeBase
 {
 public:
-	CCFX(std::string strDate);
-	~CCFX();
+	CCFX(const std::string& strDate);
+	virtual ~CCFX();
 
 public:
 	bool GetDataFromWeb(std::vector<std::string>& vOut);
