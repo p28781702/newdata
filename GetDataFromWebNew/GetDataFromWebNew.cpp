@@ -9,7 +9,7 @@
 #include "XZCE.h"
 #include <iostream>
 #include <memory>
-#include "Log.h"
+#include "..\\..\\kCommon\\include\\Log.h"
 using namespace std;
 
 int _tmain(int argc, _TCHAR* argv[])
@@ -66,7 +66,7 @@ int _tmain(int argc, _TCHAR* argv[])
 			//////////////////////////////////////////////数据检查//////////////////////////////////////////////////
 			if ( CExchangeBase::CheckVal(vec) == 0)
 			{
-				LOG_FATAL("部分数据严重哦错误，注意查看");
+				LOG_FATAL("部分数据严重错误，注意查看");
 			}
 
 			//////////////////////////////////////////////数据合并写入/////////////////////////////////////////////
