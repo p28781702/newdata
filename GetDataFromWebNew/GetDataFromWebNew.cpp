@@ -9,7 +9,7 @@
 #include "XZCE.h"
 #include <iostream>
 #include <memory>
-#include "..\\..\\kCommon\\include\\Log.h"
+#include "Log.h"
 using namespace std;
 
 int _tmain(int argc, _TCHAR* argv[])

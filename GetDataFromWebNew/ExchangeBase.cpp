@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "ExchangeBase.h"
-#include "..\\..\\kCommon\\include\\Log.h"
+#include <Log.h>
 using namespace std;
 
 CExchangeBase::CExchangeBase()
